@@ -6,7 +6,7 @@
 ![GitHub Downloads (all assets, all releases)](https://img.shields.io/github/downloads/MMRLApp/MMRL/total?label=GitHub%20Downloads)
 
 A app for managing, sharing, and exploring Magisk modules across repositories.
-
+ 
 ## Features
 
 - **Comprehensive Root Manager Support**: Full compatibility with Magisk, KernelSU, and APatch for diverse root management options.
