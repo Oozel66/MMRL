@@ -29,6 +29,7 @@ data class ScreenWidth(
  * 
  * @return ScreenWidth data class with boolean flags for small/medium/large classifications
  */
+@Deprecated("Use LocalWindowSizeClass instead")
 @Composable
 fun currentScreenWidth(): ScreenWidth {
     val context = LocalContext.current

@@ -11,6 +11,8 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.annotation.StringRes
+import androidx.compose.material3.windowsizeclass.ExperimentalMaterial3WindowSizeClassApi
+import androidx.compose.material3.windowsizeclass.calculateWindowSizeClass
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionContext
 import androidx.compose.runtime.getValue
@@ -34,6 +36,7 @@ import com.dergoogler.mmrl.ui.providable.LocalNavController
 import com.dergoogler.mmrl.ui.providable.LocalSettings
 import com.dergoogler.mmrl.ui.providable.LocalSuperUserViewModel
 import com.dergoogler.mmrl.ui.providable.LocalUserPreferences
+import com.dergoogler.mmrl.ui.providable.LocalWindowSizeClass
 import com.dergoogler.mmrl.ui.theme.Colors
 import com.dergoogler.mmrl.ui.theme.MMRLAppTheme
 import com.dergoogler.mmrl.viewmodel.SettingsViewModel
@@ -186,6 +189,7 @@ open class MMRLComponentActivity : ComponentActivity() {
     }
 }
 
+@OptIn(ExperimentalMaterial3WindowSizeClassApi::class)
 @Composable
 fun BaseContent(
     activity: ComponentActivity,
@@ -196,6 +200,7 @@ fun BaseContent(
         initialValue = null,
     )
 
+    val windowSizeClass = calculateWindowSizeClass(activity)
     val navController = rememberNavController()
     val mainNavController = rememberNavController()
     val navigator = navController.rememberDestinationsNavigator()
@@ -217,6 +222,7 @@ fun BaseContent(
         themeColor = preferences.themeColor,
         providerValues =
             arrayOf(
+                LocalWindowSizeClass provides windowSizeClass,
                 LocalDestinationsNavigator provides navigator,
                 LocalActivity provides activity,
                 LocalSuperUserViewModel provides hiltViewModel<SuperUserViewModel>(activity),

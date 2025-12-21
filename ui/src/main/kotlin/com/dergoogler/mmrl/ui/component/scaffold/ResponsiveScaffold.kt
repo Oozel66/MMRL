@@ -6,10 +6,11 @@ import androidx.compose.material3.FabPosition
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.ScaffoldDefaults
 import androidx.compose.material3.contentColorFor
+import androidx.compose.material3.windowsizeclass.WindowWidthSizeClass
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import com.dergoogler.mmrl.ext.currentScreenWidth
+import com.dergoogler.mmrl.ui.providable.LocalWindowSizeClass
 
 @Composable
 fun ResponsiveScaffold(
@@ -25,20 +26,22 @@ fun ResponsiveScaffold(
     contentWindowInsets: WindowInsets = ScaffoldDefaults.contentWindowInsets,
     content: @Composable (ScaffoldScope.(PaddingValues) -> Unit),
 ) {
-    val width = currentScreenWidth()
+    val windowSizeClass = LocalWindowSizeClass.current
 
     Scaffold(
         modifier = modifier,
         floatingActionButtonPosition = floatingActionButtonPosition,
         topBar = topBar,
         bottomBar = {
-            if (width.isSmall) bottomBar()
+// TODO: Fix screen size bug
+//            if (windowSizeClass.widthSizeClass == WindowWidthSizeClass.Compact)
+            bottomBar()
         },
         snackbarHost = snackbarHost,
         contentWindowInsets = contentWindowInsets,
         floatingActionButton = floatingActionButton,
         railBar = {
-            if (width.isMedium) railBar()
+            if (windowSizeClass.widthSizeClass == WindowWidthSizeClass.Medium) railBar()
         },
         containerColor = containerColor,
         contentColor = contentColor,

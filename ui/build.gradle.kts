@@ -49,6 +49,7 @@ dependencies {
     implementation(libs.square.retrofit.moshi)
     implementation(libs.androidx.runtime.android)
     implementation(libs.androidx.annotation)
+    implementation(libs.androidx.compose.material3.windowSizeClass)
     implementation(libs.androidx.activity.compose)
     implementation(libs.androidx.browser)
     implementation(libs.coil.compose)
