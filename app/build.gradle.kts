@@ -191,7 +191,7 @@ dependencies {
     implementation(projects.compat)
     implementation(projects.datastore)
 
-    implementation(libs.webuix.portable)
+    implementation(libs.webuix.hwui)
     implementation(libs.webuix.helper)
 
     implementation(libs.kotlin.stdlib)

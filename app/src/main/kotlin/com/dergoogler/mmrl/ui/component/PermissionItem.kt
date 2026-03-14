@@ -11,7 +11,6 @@ import com.dergoogler.mmrl.ui.component.listItem.dsl.component.Item
 import com.dergoogler.mmrl.ui.component.listItem.dsl.component.item.Description
 import com.dergoogler.mmrl.ui.component.listItem.dsl.component.item.Labels
 import com.dergoogler.mmrl.ui.component.listItem.dsl.component.item.Title
-import com.dergoogler.mmrl.webui.model.WebUIPermissions
 
 @Composable
 fun ListScope.PermissionItem(
@@ -119,7 +118,7 @@ private fun getPermissionDetails(id: String): Permission? {
                     R.string.view_module_features_apks,
                     R.string.view_module_features_apks_sub,
                 ),
-            WebUIPermissions.PLUGIN_DEX_LOADER to
+            "webui.permission.PLUGIN_DEX_LOADER" to
                 Permission(
                     R.string.view_module_features_dex_loader,
                     R.string.view_module_features_dex_loader_sub,
