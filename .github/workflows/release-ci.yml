@@ -98,6 +98,14 @@ jobs:
               echo keyStore='${{ github.workspace }}/key.jks' >> signing.properties
               echo ${{ secrets.KEY_STORE }} | base64 --decode > ${{ github.workspace }}/key.jks
           fi
+          
+      - name: Set up kez for private packages
+        shell: bash
+        run: |
+          if [ -n "${{ secrets.ACTOR }}" ]; then
+              echo gpr.user='${{ secrets.ACTOR }}' >> gradle.properties
+              echo gpr.key='${{ secrets.GITHUB_TOKEN }}' >> gradle.properties
+          fi
 
       - name: Set up JDK
         uses: actions/setup-java@v4
