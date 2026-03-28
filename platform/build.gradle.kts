@@ -2,7 +2,6 @@ import java.security.SecureRandom
 
 plugins {
     alias(libs.plugins.android.library)
-    alias(libs.plugins.jetbrains.kotlin.android)
     alias(libs.plugins.compose.compiler)
     alias(libs.plugins.kotlin.parcelize)
     alias(libs.plugins.ksp)
@@ -72,16 +71,13 @@ android {
         sourceCompatibility = JavaVersion.VERSION_21
         targetCompatibility = JavaVersion.VERSION_21
     }
-
-    kotlinOptions {
-        jvmTarget = "21"
-    }
 }
 
 dependencies {
     compileOnly(projects.hiddenApi)
     implementation(projects.ext)
     implementation(projects.compat)
+    implementation(libs.kotlin.parcelize.runtime)
     implementation(libs.androidx.core.ktx)
     implementation(libs.hiddenApiBypass)
     implementation(libs.androidx.compose.ui)
@@ -92,6 +88,16 @@ dependencies {
     implementation(libs.kotlinx.serialization.protobuf)
     implementation(libs.square.moshi)
     ksp(libs.square.moshi.kotlin)
+}
+
+// AGP 9.0 applies KGP internally without going through Gradle's plugin manager, which prevents
+// KotlinCompilerPluginSupportPlugin.applyToCompilation() from being called for kotlin.parcelize.
+// Use configurations.all (not afterEvaluate + configurations.names) so all variant configs are covered.
+val parcelizeVersion = libs.versions.kotlin.get()
+configurations.all {
+    if (name.startsWith("kotlinCompilerPluginClasspath")) {
+        project.dependencies.add(name, "org.jetbrains.kotlin:kotlin-parcelize-compiler:$parcelizeVersion")
+    }
 }
 
 fun generateRandomName(

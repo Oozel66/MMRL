@@ -45,7 +45,12 @@ import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.launch
 import timber.log.Timber
 import java.io.File
-import kotlin.collections.first
+
+data class ModuleOps(
+    val isOpsRunning: Boolean,
+    val toggle: (Boolean) -> Unit,
+    val change: () -> Unit,
+)
 
 @HiltViewModel(assistedFactory = ModuleViewModel.Factory::class)
 class ModuleViewModel
@@ -345,12 +350,6 @@ class ModuleViewModel
                     change = {},
                 )
         }
-
-        data class ModuleOps(
-            val isOpsRunning: Boolean,
-            val toggle: (Boolean) -> Unit,
-            val change: () -> Unit,
-        )
 
         @AssistedFactory
         interface Factory {

@@ -15,7 +15,7 @@ abstract class TerminalActivity : MMRLComponentActivity() {
     private fun TerminalViewModel.cancelJob(message: String) {
         try {
             terminalJob?.cancel(message)
-            terminal.shell.close()
+            // terminal.shell.close() -- shell API removed in terminal:1.0.2
         } catch (e: Exception) {
             Log.e(TAG, "Failed to cancel job", e)
         }

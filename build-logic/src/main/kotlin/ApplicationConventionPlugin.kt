@@ -14,7 +14,9 @@ class ApplicationConventionPlugin : Plugin<Project> {
     override fun apply(target: Project) =
         with(target) {
             apply(plugin = "com.android.application")
-            apply(plugin = "org.jetbrains.kotlin.android")
+            if (extensions.findByName("kotlin") == null) {
+                apply(plugin = "org.jetbrains.kotlin.android")
+            }
 
             extensions.configure<ApplicationExtension> {
                 compileSdk = COMPILE_SDK
@@ -40,11 +42,11 @@ class ApplicationConventionPlugin : Plugin<Project> {
             extensions.configure<KotlinAndroidProjectExtension> {
                 jvmToolchain(21)
 
-                sourceSets.all {
-                    languageSettings {
-                        optIn("kotlin.ExperimentalStdlibApi")
-                        optIn("kotlinx.coroutines.FlowPreview")
-                    }
+                compilerOptions {
+                    optIn.addAll(
+                        "kotlin.ExperimentalStdlibApi",
+                        "kotlinx.coroutines.FlowPreview",
+                    )
                 }
             }
         }

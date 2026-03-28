@@ -107,6 +107,7 @@ object NetworkUtils {
             },
         )
 
+    @OptIn(ExperimentalStdlibApi::class)
     suspend inline fun <reified T> requestJson(url: String): Result<T> {
         val result =
             request(url) { body, _ ->

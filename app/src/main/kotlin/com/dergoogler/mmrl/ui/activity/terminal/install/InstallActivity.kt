@@ -60,7 +60,6 @@ class InstallActivity : TerminalActivity() {
                     description = R.string.install_screen_confirm_text,
                     onClose = {
                         confirmDialog = false
-                        viewModel.terminal.shell.close()
                         finish()
                     },
                     onConfirm = {

@@ -14,7 +14,6 @@ class ComposeConventionPlugin : Plugin<Project> {
     override fun apply(target: Project) =
         with(target) {
             apply(plugin = "com.android.application")
-            apply(plugin = "org.jetbrains.kotlin.android")
             apply(plugin = "org.jetbrains.kotlin.plugin.compose")
 
             extensions.configure<ApplicationExtension> {
@@ -24,12 +23,12 @@ class ComposeConventionPlugin : Plugin<Project> {
             }
 
             extensions.configure<KotlinAndroidProjectExtension> {
-                sourceSets.all {
-                    languageSettings {
-                        optIn("androidx.compose.material3.ExperimentalMaterial3Api")
-                        optIn("androidx.compose.foundation.ExperimentalFoundationApi")
-                        optIn("androidx.compose.foundation.layout.ExperimentalLayoutApi")
-                    }
+                compilerOptions {
+                    optIn.addAll(
+                        "androidx.compose.material3.ExperimentalMaterial3Api",
+                        "androidx.compose.foundation.ExperimentalFoundationApi",
+                        "androidx.compose.foundation.layout.ExperimentalLayoutApi",
+                    )
                 }
             }
 

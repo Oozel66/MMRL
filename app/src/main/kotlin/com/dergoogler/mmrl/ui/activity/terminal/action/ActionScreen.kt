@@ -5,7 +5,7 @@ import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.focusable
 import androidx.compose.foundation.layout.WindowInsets
-import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -40,12 +40,13 @@ import com.dergoogler.mmrl.ui.activity.MMRLComponentActivity
 import com.dergoogler.mmrl.ui.component.LocalScreenProvider
 import com.dergoogler.mmrl.ui.component.dialog.ConfirmDialog
 import com.dergoogler.mmrl.ui.component.scaffold.Scaffold
-import com.dergoogler.mmrl.ui.component.terminal.TerminalView
 import com.dergoogler.mmrl.ui.component.toolbar.BlurNavigateUpToolbar
 import com.dergoogler.mmrl.ui.providable.LocalHazeState
 import com.dergoogler.mmrl.ui.providable.LocalUserPreferences
 import com.dergoogler.mmrl.viewmodel.ActionViewModel
 import dev.chrisbanes.haze.hazeSource
+import dev.mmrlx.compose.terminal.Terminal
+import dev.mmrlx.terminal.TerminalEmulator.Companion.TERMINAL_CURSOR_STYLE_NONE
 import kotlinx.coroutines.launch
 
 @Composable
@@ -67,15 +68,15 @@ fun ActionScreen(viewModel: ActionViewModel) =
 
         var cancelAction by remember { mutableStateOf(false) }
 
-        val shell = viewModel.terminal.shell
-        val event = viewModel.terminal.event
+
+        val event = viewModel.event
 
         val allowCancel = userPreferences.allowCancelAction
 
         val backHandler = {
             if (allowCancel) {
                 when {
-                    event.isLoading && shell.isAlive -> cancelAction = true
+                    event.isLoading /* && shell.isAlive */ -> cancelAction = true
                     event.isFinished -> (context as MMRLComponentActivity).finish()
                 }
             } else {
@@ -126,7 +127,7 @@ fun ActionScreen(viewModel: ActionViewModel) =
                 onConfirm = {
                     scope.launch {
                         cancelAction = false
-                        shell.close()
+                        // shell.close()
                     }
                 },
             )
@@ -141,7 +142,8 @@ fun ActionScreen(viewModel: ActionViewModel) =
 
                             else -> false
                         }
-                    }.focusRequester(focusRequester)
+                    }
+                    .focusRequester(focusRequester)
                     .focusable()
                     .nestedScroll(scrollBehavior.nestedScrollConnection),
             topBar = {
@@ -156,15 +158,14 @@ fun ActionScreen(viewModel: ActionViewModel) =
             snackbarHost = { SnackbarHost(snackbarHostState) },
             contentWindowInsets = WindowInsets.none,
         ) {
-            TerminalView(
-                contentPadding = it,
-                terminal = viewModel.terminal,
-                state = listState,
-                modifier =
-                    Modifier
-                        .fillMaxSize()
-                        .hazeSource(LocalHazeState.current),
-            )
+            Terminal(
+                modifier = Modifier
+                    .hazeSource(LocalHazeState.current)
+                    .padding(it)
+            ) { emu ->
+                emu.setCursorStyle(TERMINAL_CURSOR_STYLE_NONE)
+                viewModel.onEmulatorCreated(emu)
+            }
         }
     }
 

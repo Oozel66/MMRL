@@ -35,6 +35,7 @@ data class UpdateJson(
     }
 
     companion object {
+        @OptIn(ExperimentalStdlibApi::class)
         suspend fun loadToVersionItem(url: String): VersionItem? {
             if (!NetworkUtils.isUrl(url)) return null
 

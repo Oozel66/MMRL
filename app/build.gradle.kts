@@ -1,5 +1,6 @@
 
-import com.android.build.gradle.internal.api.ApkVariantOutputImpl
+
+import com.android.build.api.variant.impl.VariantOutputImpl
 
 plugins {
     alias(libs.plugins.self.application)
@@ -8,7 +9,6 @@ plugins {
     alias(libs.plugins.self.room)
     alias(libs.plugins.kotlin.parcelize)
     alias(libs.plugins.ksp)
-    alias(libs.plugins.protobuf)
     alias(libs.plugins.kotlin.serialization)
 }
 
@@ -129,11 +129,13 @@ android {
             buildConfigField("String", "MIN_SDK", "\"$MIN_SDK\"")
             buildConfigField("String", "LATEST_COMMIT_ID", "\"${commitId}\"")
 
-            manifestPlaceholders["__packageName__"] = mmrlBaseApplicationId}
+            manifestPlaceholders["__packageName__"] = mmrlBaseApplicationId
+        }
     }
 
     buildFeatures {
         buildConfig = true
+        resValues = true
     }
 
     compileOptions {
@@ -167,15 +169,19 @@ android {
         includeInBundle = false
     }
 
-    applicationVariants.configureEach {
-        outputs.configureEach {
-            (this as? ApkVariantOutputImpl)?.outputFileName =
-                "MMRL-$versionName-$flavorName.apk"
-        }
-    }
 }
 
+
 androidComponents {
+    onVariants { variant ->
+        variant.outputs.filterIsInstance<VariantOutputImpl>().forEach { output ->
+            output.outputFileName.set(
+                output.versionName.map { vName ->
+                    "MMRL-${vName}-${variant.buildType ?: variant.name}.apk"
+                }
+            )
+        }
+    }
     onVariants(selector().withBuildType("release")) {
         it.packaging.resources.excludes.add("META-INF/**")
     }
@@ -272,6 +278,18 @@ dependencies {
 
     implementation(libs.composedestinations.core)
     ksp(libs.composedestinations.ksp)
+
+    implementation(libs.kotlin.parcelize.runtime)
+}
+
+// AGP 9.0 applies KGP internally without triggering KotlinCompilerPluginSupportPlugin.applyToCompilation(),
+// so kotlin-parcelize-compiler is never added to the kotlinc plugin classpath. Use configurations.all
+// (not afterEvaluate + configurations.names) so flavor-specific configs are also covered when created lazily.
+val parcelizeVersion = libs.versions.kotlin.get()
+configurations.all {
+    if (name.startsWith("kotlinCompilerPluginClasspath")) {
+        project.dependencies.add(name, "org.jetbrains.kotlin:kotlin-parcelize-compiler:$parcelizeVersion")
+    }
 }
 
 tasks.register("version") {
