@@ -6,6 +6,7 @@ import android.util.Log
 import com.dergoogler.mmrl.ext.nullable
 import com.dergoogler.mmrl.ext.toMap
 import com.dergoogler.mmrl.platform.file.SuFile
+import com.dergoogler.mmrl.platform.file.readText
 import com.dergoogler.mmrl.platform.file.writeText
 import com.dergoogler.mmrl.platform.model.ModId
 import com.dergoogler.mmrl.platform.util.moshi

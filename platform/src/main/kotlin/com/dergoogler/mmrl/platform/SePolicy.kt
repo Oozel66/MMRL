@@ -2,6 +2,7 @@ package com.dergoogler.mmrl.platform
 
 import android.util.Log
 import com.dergoogler.mmrl.platform.file.SuFile
+import com.dergoogler.mmrl.platform.file.readText
 import com.dergoogler.mmrl.platform.ksu.KsuNative
 import java.io.IOException
 
